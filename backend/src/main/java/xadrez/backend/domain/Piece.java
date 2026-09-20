@@ -29,7 +29,7 @@ public class Piece {
 		this.color = color;
 	}
 
-	public int[] getPostion(){
+	public int[] getPosition(){
 		return this.position;
 	}
 

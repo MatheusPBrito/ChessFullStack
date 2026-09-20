@@ -134,7 +134,7 @@ public final class PieceMoves {
 		{-7,7}
 	};
 
-	public static final int[][] king = {
+	public static final int[][] KING = {
 		{1,0},
 		{0,1},
 		{-1,0},
@@ -143,7 +143,7 @@ public final class PieceMoves {
 		{-1,-1}
 	};
 
-	public static int[][] pawn = {
+	public static int[][] PAWN = {
 		{0,1}	
 	};
 }
