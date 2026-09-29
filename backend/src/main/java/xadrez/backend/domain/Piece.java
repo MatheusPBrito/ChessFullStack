@@ -3,10 +3,10 @@ package xadrez.backend.domain;
 public class Piece {
 
 	private String name,color;
-	private int[] position;
-	private int[][] moves;
+	private int position;
+	private int[] moves;
 
-	public Piece(String name,String color, int[] position, int[][] moves){
+	public Piece(String name,String color, int position, int[] moves){
 		setName(name);
 		setColor(color);
 		setPosition(position);
@@ -29,19 +29,19 @@ public class Piece {
 		this.color = color;
 	}
 
-	public int[] getPosition(){
+	public int getPosition(){
 		return this.position;
 	}
 
-	public void setPosition(int[] position){
+	public void setPosition(int position){
 		this.position = position;
 	}
 
-	public int[][] getMoves(){
+	public int[] getMoves(){
 		return this.moves;
 	}
 
-	public void setMoves(int[][] moves){
+	public void setMoves(int[] moves){
 		this.moves = moves;
 	}
 
