@@ -39,7 +39,7 @@ class BoardTest {
 		pieces.put(59,'B');
 		pieces.put(58,'H');
 		pieces.put(57,'R');
-		pieces.put(56,'P');
+		pieces.put(37,'P');
 		pieces.put(55,'P');
 		pieces.put(54,'P');
 		pieces.put(53,'P');
@@ -48,8 +48,20 @@ class BoardTest {
 		pieces.put(50,'P');
 		pieces.put(49,'P');
 
+		pieces.put(24,'p');
+
 		Board board = new Board(pieces);
-		assertEquals("Movimento aprovado",board.movePiece(12,20));
+		assertEquals("Movimento aprovado",board.movePiece(12,28));
+		assertEquals("Movimento ilegal",board.movePiece(28,44));
+		assertEquals("Movimento aprovado",board.movePiece(28,37));
+		assertEquals("Movimento ilegal",board.movePiece(37,29));
+		assertEquals("Movimento ilegal",board.movePiece(37,28));
+
+		assertEquals("Movimento aprovado",board.movePiece(49,33));
+		assertEquals("Movimento ilegal",board.movePiece(33,17));
+		assertEquals("Movimento aprovado",board.movePiece(33,24));
+		assertEquals("Movimento aprovado",board.movePiece(24,16));
+
 
 	}
 
@@ -61,7 +73,7 @@ class BoardTest {
 			pieces.put(48 - i * 8,'p');
 
 			Board board = new Board(pieces);
-			assertEquals("Espaço ocupadoB",board.movePiece(8,56));
+			assertEquals("Peça no caminho",board.movePiece(8,56));
 		}
 
 		for(int i = 0; i < 5; i++){
@@ -70,7 +82,7 @@ class BoardTest {
 			pieces.put(16 + i * 8,'p');
 
 			Board board = new Board(pieces);
-			assertEquals("Espaço ocupadoB",board.movePiece(64,8));
+			assertEquals("Peça no caminho",board.movePiece(64,8));
 		}
 
 		for(int i = 0; i < 5; i++){
@@ -80,7 +92,7 @@ class BoardTest {
 			pieces.put(10 + i,'p');
 
 			Board board = new Board(pieces);
-			assertEquals("Espaço ocupadoB",board.movePiece(16,9));
+			assertEquals("Peça no caminho",board.movePiece(16,9));
 		}
 		System.out.println("-------------------------------------");
 		for(int i = 0; i < 5; i++){
@@ -93,7 +105,7 @@ class BoardTest {
 			System.out.println(9 + PieceMoves.getMoves(pieces.get(9))[i]);
 			System.out.println(board.pieces.get(9 + PieceMoves.getMoves(board.pieces.get(9))[i]));
 			System.out.println(board.pieces.get(16));
-			assertEquals("Espaço ocupadoB",board.movePiece(9,16));
+			assertEquals("Peça no caminho",board.movePiece(9,16));
 		}
 
 	}

@@ -150,10 +150,6 @@ public final class PieceMoves {
 						-8,
 						-9
 					};
-				case 'p':
-					return new int[] {
-						8	
-					};
 				default:
 					return new int[] {};
 			}
