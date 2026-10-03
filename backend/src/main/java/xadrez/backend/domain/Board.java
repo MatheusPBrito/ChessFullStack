@@ -4,24 +4,60 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Stream;
+import java.util.HashMap;
 
 public class Board{
 	
-	private final int MINX = 1, MAXX = 8, MINY = 1, MAXY = 8;
+	public HashMap<Integer,Character> pieces = new HashMap<>();
 
-	//this variable is public for the mean time just for testing, it should be private soon
-	public List<Piece> pieces = new ArrayList<>();
-
-	public Board(Piece piece){
-		pieces.add(piece);
+	public Board(HashMap<Integer,Character> pieces){
+		this.pieces = pieces;
 	}
 
 
-	void movePiece(int square){
-		if(square > 0 && square < 65){
-			if(Arrays.stream(pieces.get(0).getMoves())
-			.anyMatch(pos -> pos == square - pieces.get(0).getPosition()))	
-				pieces.get(0).setPosition(square);
+	String movePiece(int piecePos,int destination){
+		if(pieces.get(piecePos) != null && destination > 0 && destination < 65){
+				if(pieces.get(destination) == null ||
+					     (Character.isUpperCase(pieces.get(destination)) && !Character.isUpperCase(pieces.get(piecePos))) ||
+					     (!Character.isUpperCase(pieces.get(destination)) && Character.isUpperCase(pieces.get(piecePos)))){
+					if(Arrays.stream(PieceMoves.getMoves(pieces.get(piecePos)))
+						.anyMatch(pos -> pos == destination - piecePos)){
+						if(pieces.get(piecePos) == 'r' || 
+						   pieces.get(piecePos) == 'b' ||
+						   pieces.get(piecePos) == 'q'){
+							int moveIndex = 0;
+						  	for(int i = 0; i < PieceMoves.getMoves(pieces.get(piecePos)).length;i++){
+								if(PieceMoves.getMoves(pieces.get(piecePos))[i] == destination-piecePos){
+									moveIndex = i;
+									break;
+								}
+							}
+							int initialIndex = moveIndex;
+
+							if(initialIndex > 6){
+								while(initialIndex > 6){
+									initialIndex -= 6;	
+								}
+							}
+							else
+								initialIndex = 0;
+							
+							for(int i = initialIndex; i < moveIndex; i++){
+								if(pieces.get(piecePos + PieceMoves.getMoves(pieces.get(piecePos))[i]) != null){
+									return "Espaço ocupadoB";	
+								}
+							}
+						   }
+						pieces.put(destination,pieces.get(piecePos));
+						pieces.remove(piecePos);
+						return "Movimento aprovado";
+					}
+				}
+				else{
+					return "Espaço ocupado";	
+				}
+
 		}
+		return "Movimento ilegal";
 	}
 }
