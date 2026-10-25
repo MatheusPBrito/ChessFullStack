@@ -10,36 +10,63 @@ public class Board{
 	
 	public HashMap<Integer,Character> pieces = new HashMap<>();
 
+	public boolean whiteTurn = true;
+	int whiteEnPassant = 0, blackEnPassant = 0;
 	public Board(HashMap<Integer,Character> pieces){
 		this.pieces = pieces;
 	}
 
+	void updateBoard(){
+		if(whiteTurn){
+			if(pieces.get(blackEnPassant) != null)
+		  		pieces.put(blackEnPassant,'P');
+			whiteTurn = false;
+		}
+		else{
+			if(pieces.get(whiteEnPassant) != null)
+				pieces.put(whiteEnPassant,'p');
+			whiteTurn = true;
+		}
+		
+	}
 
 	String movePiece(int piecePos,int destination){
-		if(pieces.get(piecePos) != null && destination > 0 && destination < 65){
-				if(pieces.get(destination) == null ||
-					     (Character.isUpperCase(pieces.get(destination)) && !Character.isUpperCase(pieces.get(piecePos))) ||
-					     (!Character.isUpperCase(pieces.get(destination)) && Character.isUpperCase(pieces.get(piecePos)))){
-		   			if (Character.toLowerCase(pieces.get(piecePos)) == 'p'){
-						if(pawnLogic(piecePos,destination))
-							return "Movimento aprovado";
-					}
-					if(Arrays.stream(PieceMoves.getMoves(pieces.get(piecePos)))
-						.anyMatch(pos -> pos == destination - piecePos)){
-						if(pieceInTheWay(piecePos,destination)){
-							return "Peça no caminho";
+		if(pieces.get(piecePos) != null){
+			if((Character.isLowerCase(pieces.get(piecePos)) && whiteTurn) || (Character.isUpperCase(pieces.get(piecePos)) && !whiteTurn)){
+				if(pieces.get(piecePos) != null && destination > 0 && destination < 65){
+						if(pieces.get(destination) == null ||
+							     (Character.isUpperCase(pieces.get(destination)) && !Character.isUpperCase(pieces.get(piecePos))) ||
+							     (!Character.isUpperCase(pieces.get(destination)) && Character.isUpperCase(pieces.get(piecePos)))){
+							if (Character.toLowerCase(pieces.get(piecePos)) == 'p'){
+								if(pawnLogic(piecePos,destination)){
+									updateBoard();
+									return "Movimento aprovado";
+								}
+							}
+							if(Arrays.stream(PieceMoves.getMoves(pieces.get(piecePos)))
+								.anyMatch(pos -> pos == destination - piecePos)){
+								if(pieceInTheWay(piecePos,destination)){
+									return "Peça no caminho";
+								}
+								pieces.put(destination,pieces.get(piecePos));
+								pieces.remove(piecePos);
+								updateBoard();
+								return "Movimento aprovado";
+							}
 						}
-						pieces.put(destination,pieces.get(piecePos));
-						pieces.remove(piecePos);
-						return "Movimento aprovado";
-					}
-				}
-				else{
-					return "Espaço ocupado";	
-				}
+						else{
+							return "Espaço ocupado";	
+						}
 
+				}
+				return "Movimento ilegal";
+			}
+			else{
+				return "Você selecionou a peça de seu adversário, tente novamente";
+			}
 		}
-		return "Movimento ilegal";
+		else
+			return "Não tem peça nesse quadrado, tente novamente";
 	}
 
 	boolean pawnLogic(int piecePos, int destination){
@@ -47,31 +74,40 @@ public class Board{
 		   if(pieces.get(piecePos) == 'P'){
 			   modifier = -1;
 			   if(piecePos >  48 && destination == piecePos - 16 && pieces.get(destination + 8 ) == null && pieces.get(destination) == null){
-				pieces.put(destination,pieces.get(piecePos)); 
+				pieces.put(destination,'E'); 
+				blackEnPassant = destination;
 				pieces.remove(piecePos);
 				return true;
 			   }
 
-			   if(destination == piecePos - 9 || destination == piecePos - 7){
-				if((pieces.get(destination) != null && Character.isLowerCase(pieces.get(destination)))){
-					pieces.put(destination,pieces.get(piecePos)); 
+			   if(pieces.get(piecePos - 1) != null || pieces.get(piecePos - 1) != null && (destination == piecePos - 9 || destination == piecePos - 7)){
+				   	pieces.put(destination,'P');
 					pieces.remove(piecePos);
+					if(pieces.get(piecePos - 1) != null && pieces.get(piecePos - 1) == 'e')
+						pieces.remove(piecePos - 1);
+					else if(pieces.get(piecePos + 1) != null && pieces.get(piecePos + 1) == 'e')
+						pieces.remove(piecePos + 1);
 					return true;
-				}
 			   }
-		   }
+	
 
-		   if(piecePos < 17 && destination == piecePos + 16 && pieces.get(destination - 8) == null && pieces.get(destination) == null){
-			pieces.put(destination,pieces.get(piecePos)); 
-			pieces.remove(piecePos);
-			return true;
 		   }
-		   if(destination == piecePos + 9 || destination == piecePos + 7){
-			if((pieces.get(destination) != null && Character.isUpperCase(pieces.get(destination)))){
-				pieces.put(destination,pieces.get(piecePos)); 
+		   else {
+			   if(piecePos < 17 && destination == piecePos + 16 && pieces.get(destination - 8) == null && pieces.get(destination) == null){
+				pieces.put(destination,'e'); 
+				whiteEnPassant = destination;
 				pieces.remove(piecePos);
 				return true;
-			}
+			   }
+			   if(pieces.get(piecePos - 1) != null || pieces.get(piecePos - 1) != null && (destination == piecePos - 9 || destination == piecePos - 7)){
+				   	pieces.put(destination,'P');
+					pieces.remove(piecePos);
+					if(pieces.get(piecePos - 1) != null && pieces.get(piecePos - 1) == 'e')
+						pieces.remove(piecePos - 1);
+					else if(pieces.get(piecePos + 1) != null && pieces.get(piecePos + 1) == 'e')
+						pieces.remove(piecePos + 1);
+					return true;
+			   }
 		   }
 
 		   if (destination == piecePos + 8 * modifier){
@@ -81,7 +117,6 @@ public class Board{
 		   }
 		   else
 			   return false;
-
 
 	}
 

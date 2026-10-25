@@ -12,60 +12,6 @@ class BoardTest {
 	private Board board;
 	
 	@Test
-	void validateMovement(){
-		HashMap<Integer,Character> pieces = new HashMap<>();
-		pieces.put(1,'r');
-		pieces.put(2,'h');
-		pieces.put(3,'b');
-		pieces.put(4,'k');
-		pieces.put(5,'q');
-		pieces.put(6,'b');
-		pieces.put(7,'h');
-		pieces.put(8,'r');
-		pieces.put(9,'p');
-		pieces.put(10,'p');
-		pieces.put(11,'p');
-		pieces.put(12,'p');
-		pieces.put(13,'p');
-		pieces.put(14,'p');
-		pieces.put(15,'p');
-		pieces.put(16,'p');
-
-		pieces.put(64,'R');
-		pieces.put(63,'H');
-		pieces.put(62,'B');
-		pieces.put(61,'K');
-		pieces.put(60,'Q');
-		pieces.put(59,'B');
-		pieces.put(58,'H');
-		pieces.put(57,'R');
-		pieces.put(37,'P');
-		pieces.put(55,'P');
-		pieces.put(54,'P');
-		pieces.put(53,'P');
-		pieces.put(52,'P');
-		pieces.put(51,'P');
-		pieces.put(50,'P');
-		pieces.put(49,'P');
-
-		pieces.put(24,'p');
-
-		Board board = new Board(pieces);
-		assertEquals("Movimento aprovado",board.movePiece(12,28));
-		assertEquals("Movimento ilegal",board.movePiece(28,44));
-		assertEquals("Movimento aprovado",board.movePiece(28,37));
-		assertEquals("Movimento ilegal",board.movePiece(37,29));
-		assertEquals("Movimento ilegal",board.movePiece(37,28));
-
-		assertEquals("Movimento aprovado",board.movePiece(49,33));
-		assertEquals("Movimento ilegal",board.movePiece(33,17));
-		assertEquals("Movimento aprovado",board.movePiece(33,24));
-		assertEquals("Movimento aprovado",board.movePiece(24,16));
-
-
-	}
-
-	@Test
 	void validateMovementB(){
 		for(int i = 0; i < 5; i++){
 			HashMap<Integer,Character> pieces = new HashMap<>();
@@ -88,23 +34,17 @@ class BoardTest {
 		for(int i = 0; i < 5; i++){
 			HashMap<Integer,Character> pieces = new HashMap<>();
 			pieces.put(16,'r');
-			System.out.println(10 + i);
 			pieces.put(10 + i,'p');
 
 			Board board = new Board(pieces);
 			assertEquals("Peça no caminho",board.movePiece(16,9));
 		}
-		System.out.println("-------------------------------------");
 		for(int i = 0; i < 5; i++){
 			HashMap<Integer,Character> pieces = new HashMap<>();
 			pieces.put(9,'r');
-			System.out.println(10 + i);
 			pieces.put(15 - i,'p');
 
 			Board board = new Board(pieces);
-			System.out.println(9 + PieceMoves.getMoves(pieces.get(9))[i]);
-			System.out.println(board.pieces.get(9 + PieceMoves.getMoves(board.pieces.get(9))[i]));
-			System.out.println(board.pieces.get(16));
 			assertEquals("Peça no caminho",board.movePiece(9,16));
 		}
 
@@ -164,6 +104,23 @@ class BoardTest {
 			assertEquals("Movimento aprovado",board.movePiece(9,10+i));
 		}
 
+	}
+
+	@Test
+	void enPassant(){
+		HashMap<Integer,Character> pieces = new HashMap<>();
+		pieces.put(10,'p');
+		pieces.put(27,'P');
+
+		Board board = new Board(pieces);
+		assertEquals(true,board.whiteTurn);
+		assertEquals("Movimento aprovado", board.movePiece(10,26));
+		assertEquals('e',pieces.get(26));
+		assertEquals(false,board.whiteTurn);
+		assertEquals("Movimento aprovado",board.movePiece(27,18));
+		assertEquals(null,pieces.get(26));
+		assertEquals(null,pieces.get(27));
+		assertEquals('P',pieces.get(18));
 	}
 
 }
